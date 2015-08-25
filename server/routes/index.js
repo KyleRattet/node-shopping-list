@@ -23,8 +23,23 @@ storage.addItem('apples');
 storage.addItem('bananas');
 storage.addItem('oranges');
 
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+//route handler showing items in json format
+router.get('/items', function(req, res, next) {
+  res.json(storage.items);
+});
+
+//POST single item
+router.post('/items', function(req, res) {
+
+  var newItem = storage.addItem(req.body.name);
+  storage.item.push(newItem);
+  console.log(storage.item);
+
+  res.json({
+    message: "success", item: newItem
+  });
+
+
 });
 
 module.exports = router;
