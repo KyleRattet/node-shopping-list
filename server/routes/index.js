@@ -59,22 +59,30 @@ router.put('/items/:id', function(req, res, next) {
     return item.id === parseInt(req.params.id);
   });
 
-  console.log(listItem);
 
+  //if item with that id exists, do the following
   if (listItem.length>0){
 
+  //looping through storage items to find object with that id, and then changing it to whatever req.body.name input in httpie is
     for (var i = 0; i < storage.items.length; i++) {
        if (storage.items[i].id === parseInt(req.params.id)) {
           for (key in req.body) {
             if (key === 'name') {
               storage.items[i].name = req.body.name;
+            } else if (key === 'id') {
+              storage.items[i].id = req.body.id;
             }
         }
       }
     }
-    res.send(storage.items);
+    //updated on the browser
+    res.json(storage.items);
   } else {
-    res.json({message: "Item doesn't exist."});
+    var newItem = storage.addItem(req.body.name);
+    res.json({
+      message: "Success",
+      itemList: storage.items
+    });
   }
 
 
