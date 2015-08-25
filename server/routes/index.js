@@ -52,7 +52,7 @@ router.post('/items', function(req, res) {
 });
 
 // //put single item
-router.put('/items/:id', function(req, res, next) {
+router.put('/item/:id', function(req, res, next) {
 
   // //validating to see if it exists
   var listItem = storage.items.filter(function (item) {
@@ -83,11 +83,38 @@ router.put('/items/:id', function(req, res, next) {
       message: "Success",
       itemList: storage.items
     });
+
   }
 
+});
 
+router.delete('/item/:id', function(req, res, next){
+
+
+  //test to  see if item exists
+  var listItem = storage.items.filter(function (item) {
+    return item.id === parseInt(req.params.id);
+  });
+
+  if (listItem.length > 0) {
+    for (var i = 0; i < storage.items.length; i++) {
+      if (storage.items[i].id === parseInt(req.params.id)) {
+
+        var tempItem = storage.items.splice(i,1);
+        res.json({
+          message: "That item is gone!",
+          removedItem: tempItem,
+          itemList: storage.items
+        });
+      }
+    }
+  } else {
+    res.json("This item doesn't exist in the list.");
+  }
 
 });
+
+
 
 
 
