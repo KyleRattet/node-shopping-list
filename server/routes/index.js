@@ -19,9 +19,9 @@ ItemLibrary.prototype.addItem = function (name) {
 
 //test instances
 var storage = new ItemLibrary ();
-storage.addItem('apples');
-storage.addItem('bananas');
-storage.addItem('oranges');
+storage.addItem('Noodles');
+storage.addItem('Tomatoes');
+storage.addItem('Peppers');
 
 //route handler showing items in json format
 router.get('/items', function(req, res, next) {
@@ -30,16 +30,27 @@ router.get('/items', function(req, res, next) {
 
 //POST single item
 router.post('/items', function(req, res) {
+  //filter to see if item already exists
+
 
   var newItem = storage.addItem(req.body.name);
-  storage.item.push(newItem);
-  console.log(storage.item);
+  // console.log(req.body.name);
+  // console.log(newItem);
+  // storage.item.push(newItem);
+  console.log(storage);
 
   res.json({
     message: "success", item: newItem
   });
 
-
 });
+
+// //put single item
+// router.put('/items/:id', function(req, res, next) {
+
+// });
+
+
+
 
 module.exports = router;
