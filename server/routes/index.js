@@ -31,24 +31,55 @@ router.get('/items', function(req, res, next) {
 //POST single item
 router.post('/items', function(req, res) {
   //filter to see if item already exists
+  var listItem = storage.items.filter(function (item) {
+    return item.name.toLowerCase() === req.body.name.toLowerCase();
 
-
-  var newItem = storage.addItem(req.body.name);
-  // console.log(req.body.name);
-  // console.log(newItem);
-  // storage.item.push(newItem);
-  console.log(storage);
-
-  res.json({
-    message: "success", item: newItem
   });
+
+  if (listItem.length > 0) {
+    res.json({
+      message: "Item already in the shopping list."
+    });
+  } else {
+    var newItem = storage.addItem(req.body.name);
+    res.json({
+      message: "Success",
+      itemList: storage.items
+    });
+
+  }
 
 });
 
 // //put single item
-// router.put('/items/:id', function(req, res, next) {
+router.put('/items/:id', function(req, res, next) {
 
-// });
+  // //validating to see if it exists
+  var listItem = storage.items.filter(function (item) {
+    return item.id === parseInt(req.params.id);
+  });
+
+  console.log(listItem);
+
+  if (listItem.length>0){
+
+    for (var i = 0; i < storage.items.length; i++) {
+       if (storage.items[i].id === parseInt(req.params.id)) {
+          for (key in req.body) {
+            if (key === 'name') {
+              storage.items[i].name = req.body.name;
+            }
+        }
+      }
+    }
+    res.send(storage.items);
+  } else {
+    res.json({message: "Item doesn't exist."});
+  }
+
+
+
+});
 
 
 
