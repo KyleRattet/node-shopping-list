@@ -36,11 +36,8 @@ function handlePut (itemID, body, storage) {
   //looping through storage items to find object with that id, and then changing it to whatever req.body.name input in httpie is
     for (var i = 0; i < storage.items.length; i++) {
        if (storage.items[i].id === parseInt(itemID)) {
-          for (var key in body) {
-            if (key === 'name') {
               storage.items[i].name = body.name;
-            }
-        }
+
       }
     }
     //updated on the browser
