@@ -1,33 +1,31 @@
 //handle post
-function handlePost (bodyName, storageArray) {
+function handlePost (bodyName, storage) {
     //filter to see if item already exists
-  var listItem = storageArray.filter(function (item) {
+  var listItem = storage.items.filter(function (item) {
     return item.name.toLowerCase() === bodyName.toLowerCase();
 
   });
-  console.log(listItem, "list item");
-
-  console.log(bodyName, "body name var");
 
   if (listItem.length > 0) {
-     console.log(storageArray, "storage array");
     return({
       message: "Item already in the shopping list."
     });
   } else {
+
      var newItem = storage.addItem(bodyName);
     return ({
       message: "Success",
-      itemList: storageArray
+      itemList: storage.items
     });
   }
 }
 
-
+//itemID = req.params.id
+//body = req.body
 ///handle put
-function handlePut (itemID, body, bodyName, bodyID, storageArray) {
+function handlePut (itemID, body, storage) {
     // //validating to see if it exists
-  var listItem = storageArray.filter(function (item) {
+  var listItem = storage.items.filter(function (item) {
     return item.id === parseInt(itemID);
   });
 
@@ -36,24 +34,23 @@ function handlePut (itemID, body, bodyName, bodyID, storageArray) {
   if (listItem.length>0){
 
   //looping through storage items to find object with that id, and then changing it to whatever req.body.name input in httpie is
-    for (var i = 0; i < storageArray.length; i++) {
-       if (storageArray[i].id === parseInt(itemID)) {
+    for (var i = 0; i < storage.items.length; i++) {
+       if (storage.items[i].id === parseInt(itemID)) {
           for (var key in body) {
             if (key === 'name') {
-              storageArray[i].name = bodyName;
-            } else if (key === 'id') {
-              storageArray[i].id = bodyID;
+              storage.items[i].name = body.name;
             }
         }
       }
     }
     //updated on the browser
-    return (storageArray);
+    return storage.items;
   } else {
-    var newItem = storage.addItem(bodyName);
+    var newItem = storage.addItem(body.name);
+    console.log(newItem, "newItem");
     return ({
       message: "Success",
-      itemList: storageArray
+      itemList: storage.items
     });
 
   }

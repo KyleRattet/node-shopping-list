@@ -1,25 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var logic = require('../utilities/logic');
+var storage = require('../models/items');
 
-//ITEM CLASS CONSTRUCTOR
-function ItemLibrary () {
-  this.items = [];
-  this.id = 0;
-}
-
-//Item Methods
-ItemLibrary.prototype.addItem = function (name) {
-  var newItem = {
-    name: name,
-    id: this.id
-  };
-  this.items.push(newItem);
-  this.id += 1;
-};
 
 //test instances
-var storage = new ItemLibrary ();
+
 storage.addItem('Noodles');
 storage.addItem('Tomatoes');
 storage.addItem('Peppers');
@@ -31,7 +17,8 @@ router.get('/items', function(req, res, next) {
 
 //POST route refactored
 router.post('/items', function(req, res) {
-  var response = logic.handlePost(req.body.name, storage.items);
+  var response = logic.handlePost(
+    req.body.name, storage);
   res.json(response);
 
 });
@@ -62,7 +49,7 @@ router.post('/items', function(req, res) {
 
 //refactored put
 router.put('/item/:id', function(req, res, next) {
-  var response = logic.handlePut(req.params.id, req.body, req.body.name, req.body.id, storage.items);
+  var response = logic.handlePut(req.params.id, req.body ,storage);
   res.json(response);
 
 });
