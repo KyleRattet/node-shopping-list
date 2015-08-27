@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var logic = require('../utilities/logic');
 
 //ITEM CLASS CONSTRUCTOR
 function ItemLibrary () {
@@ -35,6 +36,7 @@ router.post('/items', function(req, res) {
     return item.name.toLowerCase() === req.body.name.toLowerCase();
 
   });
+  // console.log(listItem);
 
   if (listItem.length > 0) {
     res.json({
@@ -66,7 +68,7 @@ router.put('/item/:id', function(req, res, next) {
   //looping through storage items to find object with that id, and then changing it to whatever req.body.name input in httpie is
     for (var i = 0; i < storage.items.length; i++) {
        if (storage.items[i].id === parseInt(req.params.id)) {
-          for (key in req.body) {
+          for (var key in req.body) {
             if (key === 'name') {
               storage.items[i].name = req.body.name;
             } else if (key === 'id') {
@@ -88,31 +90,40 @@ router.put('/item/:id', function(req, res, next) {
 
 });
 
+
+//refactored delete route
 router.delete('/item/:id', function(req, res, next){
-
-
-  //test to  see if item exists
-  var listItem = storage.items.filter(function (item) {
-    return item.id === parseInt(req.params.id);
-  });
-
-  if (listItem.length > 0) {
-    for (var i = 0; i < storage.items.length; i++) {
-      if (storage.items[i].id === parseInt(req.params.id)) {
-
-        var tempItem = storage.items.splice(i,1);
-        res.json({
-          message: "That item is gone!",
-          removedItem: tempItem,
-          itemList: storage.items
-        });
-      }
-    }
-  } else {
-    res.json("This item doesn't exist in the list.");
-  }
-
+  var response = logic.handleDelete(req.params.id, storage.items);
+  res.json(response);
 });
+
+
+///delete route before refactoring
+//http DELETE localhost:3000/item/2
+// router.delete('/item/:id', function(req, res, next){
+
+//   //test to  see if item exists
+//   var listItem = storage.items.filter(function (item) {
+//     return item.id === parseInt(req.params.id);
+//   });
+
+//   if (listItem.length > 0) {
+//     for (var i = 0; i < storage.items.length; i++) {
+//       if (storage.items[i].id === parseInt(req.params.id)) {
+
+//         var tempItem = storage.items.splice(i,1);
+//         res.json({
+//           message: "That item is deleted from the list!",
+//           removedItem: tempItem,
+//           itemList: storage.items
+//         });
+//       }
+//     }
+//   } else {
+//     res.json("This item doesn't exist in the list.");
+//   }
+
+// });
 
 
 
